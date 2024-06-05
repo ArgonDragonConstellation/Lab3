@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Практическая часть</title>
+    <style>
+        body {
+            font-family: Tahoma, serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .learned-ok {
+            color: green;
+        }
+        .learning-in-progress {
+            color: orange;
+        }
+        .not-learned {
+            color: red;
+        }
+        .profile {
+            margin-top: 20px;
+        }
+        .profile img {
+            max-width: 150px;
+            border-radius: 50%;
+        }
+        .profile p {
+            font-size: 1.2em;
+        }
+        .profile .input-section {
+            margin-top: 10px;
+        }
+        .profile input, .profile button {
+            margin: 5px 0;
+        }
+        .profile .change-color {
+            margin-top: 20px;
+        }
+        .profile .result {
+            font-size: 1.2em;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .rainbow {
+            margin-top: 20px;
+            display: table;
+        }
+        .rainbow div {
+            width: 50px;
+            height: 50px;
+            display: table-cell;
+        }
+        .red { background-color: red; }
+        .orange { background-color: orange; }
+        .yellow { background-color: yellow; }
+        .green { background-color: green; }
+        .blue { background-color: blue; }
+        .indigo { background-color: indigo; }
+        .violet { background-color: violet; }
+        .calculator {
+            margin-top: 20px;
+        }
+        .calculator input, .calculator button {
+            margin: 5px;
+        }
+        .result-box {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Конспект курса</h1>
+    <p class="learned-ok">Парные теги.</p>
+    <p class="learned-ok">Одиночные теги.</p>
+    <p class="learned-ok">Атрибуты тегов.</p>
+    <p class="learned-ok">Инлайновые (встроенные) стили.</p>
+    <p class="learning-in-progress">Внешние стили.</p>
+    <p class="not-learned">Стилизация по классам.</p>
+
+    <div class="profile">
+        <h2>Резюме</h2>
+        <img src="/mnt/data/133849184.jpg" alt="Фото">
+        <p>Имя: <span id="first-name">Дарья</span></p>
+        <p>Фамилия: <span id="last-name">Марковец</span></p>
+        <div class="input-section">
+            <input type="text" id="input-text" placeholder="Введите текст для изменения фамилии">
+            <button onclick="changeLastName()">Изменить фамилию</button>
+            <button onclick="changeBackgroundColor()">Изменить цвет фона</button>
+        </div>
+        <div class="change-color">
+            <label for="age-input">Введите ваш возраст:</label>
+            <input type="text" id="age-input">
+            <button onclick="askAge()">Уточнить возраст</button>
+        </div>
+        <div class="result" id="result"></div>
+    </div>
+
+    <div class="rainbow">
+        <div class="red"></div>
+        <div class="orange"></div>
+        <div class="yellow"></div>
+        <div class="green"></div>
+        <div class="blue"></div>
+        <div class="indigo"></div>
+        <div class="violet"></div>
+    </div>
+    <button onclick="cycleRainbow()">Циклически</button>
+    <button onclick="autoCycleRainbow()">Автоцикл</button>
+
+    <div class="calculator">
+        <h2>Калькулятор</h2>
+        <input type="text" id="num1" placeholder="Число 1">
+        <input type="text" id="num2" placeholder="Число 2">
+        <button onclick="calculate('+')">+</button>
+        <button onclick="calculate('-')">-</button>
+        <button onclick="calculate('*')">*</button>
+        <button onclick="calculate('/')">/</button>
+        <div class="result-box" id="calc-result"></div>
+    </div>
+
+    <script>
+        // Функции для работы с возрастом
+        function askAge() {
+            let age = prompt('Введите ваш возраст:');
+            while (age === null || isNaN(age) || age <= 0) {
+                age = prompt('Возраст введен неверно. Введите ваш возраст:');
+            }
+            if (confirm('Ваш возраст ' + age + '?')) {
+                document.getElementById('result').textContent = 'Ваш возраст: ' + age;
+            }
+        }
+
+        // Функции для изменения фамилии
+        function changeLastName() {
+            let newName = document.getElementById('input-text').value;
+            if (newName) {
+                document.getElementById('last-name').textContent = newName;
+            }
+        }
+
+        // Функция для изменения цвета фона
+        function changeBackgroundColor() {
+            const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+            document.body.style.backgroundColor = randomColor;
+        }
+
+        // Функции для работы с радугой
+        let colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+        let rainbowIndex = 0;
+
+        function cycleRainbow() {
+            let rainbowDivs = document.querySelectorAll('.rainbow div');
+            for (let i = 0; i < rainbowDivs.length; i++) {
+                rainbowDivs[i].className = colors[(i + rainbowIndex) % colors.length];
+            }
+            rainbowIndex = (rainbowIndex + 1) % colors.length;
+        }
+
+        function autoCycleRainbow() {
+            setInterval(cycleRainbow, 300);
+        }
+
+        // Функции для калькулятора
+        function calculate(operation) {
+            let num1 = parseFloat(document.getElementById('num1').value);
+            let num2 = parseFloat(document.getElementById('num2').value);
+            let result;
+            
+            if (isNaN(num1) || isNaN(num2)) {
+                result = 'Некорректные данные';
+            } else {
+                switch(operation) {
+                    case '+':
+                        result = num1 + num2;
+                        break;
+                    case '-':
+                        result = num1 - num2;
+                        break;
+                    case '*':
+                        result = num1 * num2;
+                        break;
+                    case '/':
+                        result = num2 === 0 ? 'Деление на ноль' : num1 / num2;
+                        break;
+                }
+                if (result > 15) {
+                    document.getElementById('calc-result').style.backgroundColor = 'red';
+                    result = 'число>15';
+                } else {
+                    document.getElementById('calc-result').style.backgroundColor = 'white';
+                }
+            }
+            document.getElementById('calc-result').textContent = result;
+        }
+    </script>
+</body>
+</html>
